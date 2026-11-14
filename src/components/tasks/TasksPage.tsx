@@ -11,6 +11,7 @@ type TasksPageProps = {
   onFiltersChange: (partial: Partial<TaskFiltersState>) => void
   onClearFilters: () => void
   onCreateTask: () => void
+  onViewTask: (task: Task) => void
   onEditTask: (task: Task) => void
   onDeleteTask: (task: Task) => void
 }
@@ -23,6 +24,7 @@ export function TasksPage({
   onFiltersChange,
   onClearFilters,
   onCreateTask,
+  onViewTask,
   onEditTask,
   onDeleteTask,
 }: TasksPageProps) {
@@ -60,6 +62,7 @@ export function TasksPage({
         {!showNoTasks && !showNoResults ? (
           <TaskList
             tasks={filteredTasks}
+            onView={onViewTask}
             onEdit={onEditTask}
             onDelete={onDeleteTask}
           />

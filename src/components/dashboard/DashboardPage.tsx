@@ -8,6 +8,7 @@ type DashboardPageProps = {
   recentTasks: Task[]
   onCreateTask: () => void
   onViewAllTasks: () => void
+  onViewTask: (task: Task) => void
   onEditTask: (task: Task) => void
 }
 
@@ -16,6 +17,7 @@ export function DashboardPage({
   recentTasks,
   onCreateTask,
   onViewAllTasks,
+  onViewTask,
   onEditTask,
 }: DashboardPageProps) {
   if (counts.total === 0) {
@@ -33,6 +35,7 @@ export function DashboardPage({
       <RecentTasks
         tasks={recentTasks}
         onViewAll={onViewAllTasks}
+        onView={onViewTask}
         onEdit={onEditTask}
       />
     </div>

@@ -1,4 +1,9 @@
-import { CalendarIcon, PencilIcon, Trash2Icon } from "lucide-react"
+import {
+  CalendarIcon,
+  EyeIcon,
+  PencilIcon,
+  Trash2Icon,
+} from "lucide-react"
 
 import { PriorityBadge, StatusBadge } from "@/components/tasks/TaskBadges"
 import { Button } from "@/components/ui/button"
@@ -20,11 +25,12 @@ import type { Task } from "@/types/task"
 
 type TaskCardsProps = {
   tasks: Task[]
+  onView: (task: Task) => void
   onEdit: (task: Task) => void
   onDelete: (task: Task) => void
 }
 
-export function TaskCards({ tasks, onEdit, onDelete }: TaskCardsProps) {
+export function TaskCards({ tasks, onView, onEdit, onDelete }: TaskCardsProps) {
   return (
     <div className="grid gap-3">
       {tasks.map((task) => {
@@ -33,11 +39,25 @@ export function TaskCards({ tasks, onEdit, onDelete }: TaskCardsProps) {
         return (
           <Card key={task.id} size="sm" className="min-w-0">
             <CardHeader className="gap-2">
-              <div className="flex items-start justify-between gap-2">
-                <CardTitle className="line-clamp-2 text-base leading-snug">
+              <div className="flex min-w-0 items-start justify-between gap-2">
+                <CardTitle className="min-w-0 flex-1 truncate text-base leading-snug">
                   {task.title}
                 </CardTitle>
                 <div className="flex shrink-0 items-center gap-1">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        aria-label={`View ${task.title}`}
+                        onClick={() => onView(task)}
+                      >
+                        <EyeIcon />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>View task</TooltipContent>
+                  </Tooltip>
+
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -67,7 +87,7 @@ export function TaskCards({ tasks, onEdit, onDelete }: TaskCardsProps) {
                   </Tooltip>
                 </div>
               </div>
-              <p className="line-clamp-3 text-sm text-muted-foreground">
+              <p className="truncate text-sm text-muted-foreground">
                 {task.description || "No description"}
               </p>
             </CardHeader>

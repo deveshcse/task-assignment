@@ -7,6 +7,7 @@ import { AppSidebar } from "@/components/layout/AppSidebar"
 import { DeleteTaskDialog } from "@/components/tasks/DeleteTaskDialog"
 import { TaskFormDialog } from "@/components/tasks/TaskFormDialog"
 import { TasksPage } from "@/components/tasks/TasksPage"
+import { ViewTaskDialog } from "@/components/tasks/ViewTaskDialog"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { useTasks } from "@/hooks/useTasks"
 import type { AppPage } from "@/types/navigation"
@@ -30,11 +31,16 @@ export function App() {
   const [page, setPage] = useState<AppPage>("dashboard")
   const [formOpen, setFormOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
+  const [viewingTask, setViewingTask] = useState<Task | null>(null)
   const [deletingTask, setDeletingTask] = useState<Task | null>(null)
 
   function openCreateDialog() {
     setEditingTask(null)
     setFormOpen(true)
+  }
+
+  function openViewDialog(task: Task) {
+    setViewingTask(task)
   }
 
   function openEditDialog(task: Task) {
@@ -86,6 +92,7 @@ export function App() {
               recentTasks={recentTasks}
               onCreateTask={openCreateDialog}
               onViewAllTasks={() => setPage("tasks")}
+              onViewTask={openViewDialog}
               onEditTask={openEditDialog}
             />
           ) : (
@@ -97,12 +104,24 @@ export function App() {
               onFiltersChange={updateFilters}
               onClearFilters={clearFilters}
               onCreateTask={openCreateDialog}
+              onViewTask={openViewDialog}
               onEditTask={openEditDialog}
               onDeleteTask={setDeletingTask}
             />
           )}
         </main>
       </SidebarInset>
+
+      <ViewTaskDialog
+        task={viewingTask}
+        open={Boolean(viewingTask)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setViewingTask(null)
+          }
+        }}
+        onEdit={openEditDialog}
+      />
 
       <TaskFormDialog
         open={formOpen}

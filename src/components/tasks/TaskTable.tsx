@@ -1,4 +1,4 @@
-import { PencilIcon, Trash2Icon } from "lucide-react"
+import { EyeIcon, PencilIcon, Trash2Icon } from "lucide-react"
 
 import { PriorityBadge, StatusBadge } from "@/components/tasks/TaskBadges"
 import { Button } from "@/components/ui/button"
@@ -21,11 +21,12 @@ import type { Task } from "@/types/task"
 
 type TaskTableProps = {
   tasks: Task[]
+  onView: (task: Task) => void
   onEdit: (task: Task) => void
   onDelete: (task: Task) => void
 }
 
-export function TaskTable({ tasks, onEdit, onDelete }: TaskTableProps) {
+export function TaskTable({ tasks, onView, onEdit, onDelete }: TaskTableProps) {
   return (
     <div className="min-w-0 overflow-hidden rounded-lg border">
       <div className="w-full overflow-x-auto">
@@ -71,6 +72,20 @@ export function TaskTable({ tasks, onEdit, onDelete }: TaskTableProps) {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            aria-label={`View ${task.title}`}
+                            onClick={() => onView(task)}
+                          >
+                            <EyeIcon />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>View task</TooltipContent>
+                      </Tooltip>
+
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
