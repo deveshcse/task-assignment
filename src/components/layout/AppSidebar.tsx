@@ -1,3 +1,4 @@
+import { useState } from "react"
 import {
   CheckSquareIcon,
   ClipboardListIcon,
@@ -15,9 +16,39 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
+type NavId = "dashboard" | "tasks"
+
+const navItems = [
+  {
+    id: "dashboard" as const,
+    label: "Dashboard",
+    icon: LayoutDashboardIcon,
+  },
+  {
+    id: "tasks" as const,
+    label: "Tasks",
+    icon: ClipboardListIcon,
+  },
+]
+
 export function AppSidebar() {
+  const { isMobile, setOpenMobile } = useSidebar()
+  const [activeNav, setActiveNav] = useState<NavId>("dashboard")
+
+  function handleNavigate(id: NavId) {
+    setActiveNav(id)
+
+    const section = document.getElementById(id)
+    section?.scrollIntoView({ behavior: "smooth", block: "start" })
+
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border px-3 py-4">
@@ -41,18 +72,19 @@ export function AppSidebar() {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton isActive tooltip="Dashboard">
-                  <LayoutDashboardIcon />
-                  <span>Dashboard</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton isActive tooltip="Tasks">
-                  <ClipboardListIcon />
-                  <span>Tasks</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {navItems.map(({ id, label, icon: Icon }) => (
+                <SidebarMenuItem key={id}>
+                  <SidebarMenuButton
+                    type="button"
+                    isActive={activeNav === id}
+                    tooltip={label}
+                    onClick={() => handleNavigate(id)}
+                  >
+                    <Icon />
+                    <span>{label}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

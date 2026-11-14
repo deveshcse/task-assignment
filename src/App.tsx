@@ -68,16 +68,18 @@ export function App() {
         <AppHeader onCreateTask={openCreateDialog} />
 
         <main className="flex min-w-0 flex-1 flex-col gap-4 p-4 sm:p-6">
-          <SummaryCards counts={counts} />
+          <section id="dashboard" className="scroll-mt-20 space-y-4">
+            <SummaryCards counts={counts} />
 
-          <TaskFilters
-            filters={filters}
-            hasActiveFilters={hasActiveFilters}
-            onChange={updateFilters}
-            onClear={clearFilters}
-          />
+            <TaskFilters
+              filters={filters}
+              hasActiveFilters={hasActiveFilters}
+              onChange={updateFilters}
+              onClear={clearFilters}
+            />
+          </section>
 
-          <section className="min-w-0 space-y-3">
+          <section id="tasks" className="min-w-0 scroll-mt-20 space-y-3">
             <div className="flex flex-wrap items-end justify-between gap-2">
               <div>
                 <h2 className="text-sm font-semibold tracking-tight">Tasks</h2>
