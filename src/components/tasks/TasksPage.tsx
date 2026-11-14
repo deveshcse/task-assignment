@@ -1,6 +1,6 @@
 import { EmptyState } from "@/components/tasks/EmptyState"
 import { TaskFilters } from "@/components/tasks/TaskFilters"
-import { TaskTable } from "@/components/tasks/TaskTable"
+import { TaskList } from "@/components/tasks/TaskList"
 import type { Task, TaskFilters as TaskFiltersState } from "@/types/task"
 
 type TasksPageProps = {
@@ -58,7 +58,7 @@ export function TasksPage({
         ) : null}
 
         {!showNoTasks && !showNoResults ? (
-          <TaskTable
+          <TaskList
             tasks={filteredTasks}
             onEdit={onEditTask}
             onDelete={onDeleteTask}

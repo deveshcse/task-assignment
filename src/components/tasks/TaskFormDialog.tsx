@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { getTodayDateInputValue } from "@/lib/format"
 import { validateTaskForm } from "@/lib/validation"
 import {
   TASK_PRIORITIES,
@@ -182,6 +183,7 @@ function TaskFormFields({
         <Input
           id="task-due-date"
           type="date"
+          min={getTodayDateInputValue()}
           value={values.dueDate}
           onChange={(event) =>
             setValues((current) => ({
