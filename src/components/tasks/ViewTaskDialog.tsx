@@ -1,3 +1,5 @@
+import { CalendarIcon } from "lucide-react"
+
 import { PriorityBadge, StatusBadge } from "@/components/tasks/TaskBadges"
 import { Button } from "@/components/ui/button"
 import {
@@ -8,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Separator } from "@/components/ui/separator"
 import { formatDueDate, isOverdue } from "@/lib/format"
 import { cn } from "@/lib/utils"
 import type { Task } from "@/types/task"
@@ -30,43 +33,85 @@ export function ViewTaskDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
-        <DialogHeader className="min-w-0 gap-2 pr-8 text-left">
-          <DialogTitle className="min-w-0 whitespace-normal break-words [overflow-wrap:anywhere] leading-snug">
-            {task?.title ?? "Task details"}
-          </DialogTitle>
-          <DialogDescription>Read-only task details</DialogDescription>
+        <DialogHeader className="min-w-0 gap-3 pr-8 text-left">
+          <div className="space-y-1">
+            <p className="text-[0.6875rem] font-medium tracking-[0.08em] text-muted-foreground uppercase">
+              Task details
+            </p>
+            <DialogTitle className="min-w-0 text-xl font-semibold whitespace-normal break-words [overflow-wrap:anywhere] leading-snug">
+              {task?.title ?? "Untitled task"}
+            </DialogTitle>
+          </div>
+          <DialogDescription className="sr-only">
+            Read-only task details
+          </DialogDescription>
+          {task ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <StatusBadge status={task.status} />
+              <PriorityBadge priority={task.priority} />
+            </div>
+          ) : null}
         </DialogHeader>
 
         {task ? (
-          <div className="grid min-w-0 gap-4 text-sm">
-            <div className="min-w-0 space-y-1.5">
-              <p className="text-xs font-medium text-muted-foreground">
+          <div className="grid min-w-0 gap-5">
+            <Separator />
+
+            <section className="min-w-0 space-y-2">
+              <h3 className="text-[0.6875rem] font-medium tracking-[0.08em] text-muted-foreground uppercase">
                 Description
-              </p>
-              <p className="min-w-0 whitespace-pre-wrap break-words [overflow-wrap:anywhere] leading-relaxed text-foreground">
-                {task.description || "No description"}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <PriorityBadge priority={task.priority} />
-              <StatusBadge status={task.status} />
-            </div>
-
-            <div className="space-y-1.5">
-              <p className="text-xs font-medium text-muted-foreground">
-                Due date
-              </p>
+              </h3>
               <p
                 className={cn(
-                  "tabular-nums",
-                  overdue && "font-medium text-destructive"
+                  "min-w-0 text-sm leading-relaxed whitespace-pre-wrap break-words [overflow-wrap:anywhere]",
+                  task.description
+                    ? "text-foreground"
+                    : "text-muted-foreground italic"
                 )}
               >
-                {formatDueDate(task.dueDate)}
-                {overdue ? " · Overdue" : ""}
+                {task.description || "No description provided."}
               </p>
-            </div>
+            </section>
+
+            <Separator />
+
+            <section className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <h3 className="text-[0.6875rem] font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Due date
+                </h3>
+                <p
+                  className={cn(
+                    "flex items-center gap-2 text-sm font-medium tabular-nums",
+                    overdue ? "text-destructive" : "text-foreground"
+                  )}
+                >
+                  <CalendarIcon className="size-4 shrink-0 text-muted-foreground" />
+                  <span>
+                    {formatDueDate(task.dueDate)}
+                    {overdue ? " · Overdue" : ""}
+                  </span>
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-[0.6875rem] font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Status
+                </h3>
+                <p className="text-sm font-medium text-foreground">
+                  {task.status}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-[0.6875rem] font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Priority
+                </h3>
+                <p className="text-sm font-medium text-foreground">
+                  {task.priority}
+                </p>
+              </div>
+            </section>
           </div>
         ) : null}
 
