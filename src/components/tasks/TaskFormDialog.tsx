@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -57,22 +57,21 @@ function toFormValues(task: Task | null): TaskFormValues {
   }
 }
 
-export function TaskFormDialog({
-  open,
-  task,
-  onOpenChange,
-  onSubmit,
-}: TaskFormDialogProps) {
-  const isEditing = Boolean(task)
-  const [values, setValues] = useState<TaskFormValues>(emptyValues)
-  const [errors, setErrors] = useState<TaskFormErrors>({})
+type TaskFormFieldsProps = {
+  initialValues: TaskFormValues
+  isEditing: boolean
+  onCancel: () => void
+  onSubmit: (values: TaskFormValues) => void
+}
 
-  useEffect(() => {
-    if (open) {
-      setValues(toFormValues(task))
-      setErrors({})
-    }
-  }, [open, task])
+function TaskFormFields({
+  initialValues,
+  isEditing,
+  onCancel,
+  onSubmit,
+}: TaskFormFieldsProps) {
+  const [values, setValues] = useState<TaskFormValues>(initialValues)
+  const [errors, setErrors] = useState<TaskFormErrors>({})
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -85,8 +84,138 @@ export function TaskFormDialog({
     }
 
     onSubmit(values)
-    onOpenChange(false)
   }
+
+  return (
+    <form className="grid gap-4" onSubmit={handleSubmit} noValidate>
+      <div className="grid gap-1.5">
+        <Label htmlFor="task-title">
+          Title <span className="text-destructive">*</span>
+        </Label>
+        <Input
+          id="task-title"
+          value={values.title}
+          onChange={(event) =>
+            setValues((current) => ({
+              ...current,
+              title: event.target.value,
+            }))
+          }
+          aria-invalid={Boolean(errors.title)}
+          placeholder="e.g. Prepare weekly report"
+        />
+        {errors.title ? (
+          <p className="text-xs text-destructive">{errors.title}</p>
+        ) : null}
+      </div>
+
+      <div className="grid gap-1.5">
+        <Label htmlFor="task-description">Description</Label>
+        <Textarea
+          id="task-description"
+          value={values.description}
+          onChange={(event) =>
+            setValues((current) => ({
+              ...current,
+              description: event.target.value,
+            }))
+          }
+          placeholder="Optional details"
+          rows={3}
+        />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-1.5">
+          <Label htmlFor="task-priority">Priority</Label>
+          <Select
+            value={values.priority}
+            onValueChange={(value) =>
+              setValues((current) => ({
+                ...current,
+                priority: value as TaskFormValues["priority"],
+              }))
+            }
+          >
+            <SelectTrigger id="task-priority" className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {TASK_PRIORITIES.map((priority) => (
+                <SelectItem key={priority} value={priority}>
+                  {priority}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="grid gap-1.5">
+          <Label htmlFor="task-status">Status</Label>
+          <Select
+            value={values.status}
+            onValueChange={(value) =>
+              setValues((current) => ({
+                ...current,
+                status: value as TaskFormValues["status"],
+              }))
+            }
+          >
+            <SelectTrigger id="task-status" className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {TASK_STATUSES.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div className="grid gap-1.5">
+        <Label htmlFor="task-due-date">
+          Due date <span className="text-destructive">*</span>
+        </Label>
+        <Input
+          id="task-due-date"
+          type="date"
+          value={values.dueDate}
+          onChange={(event) =>
+            setValues((current) => ({
+              ...current,
+              dueDate: event.target.value,
+            }))
+          }
+          aria-invalid={Boolean(errors.dueDate)}
+        />
+        {errors.dueDate ? (
+          <p className="text-xs text-destructive">{errors.dueDate}</p>
+        ) : null}
+      </div>
+
+      <DialogFooter>
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button type="submit">
+          {isEditing ? "Save changes" : "Create task"}
+        </Button>
+      </DialogFooter>
+    </form>
+  )
+}
+
+export function TaskFormDialog({
+  open,
+  task,
+  onOpenChange,
+  onSubmit,
+}: TaskFormDialogProps) {
+  const isEditing = Boolean(task)
+  const formKey = `${task?.id ?? "new"}-${open ? "open" : "closed"}`
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -100,128 +229,18 @@ export function TaskFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form className="grid gap-4" onSubmit={handleSubmit} noValidate>
-          <div className="grid gap-1.5">
-            <Label htmlFor="task-title">
-              Title <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="task-title"
-              value={values.title}
-              onChange={(event) =>
-                setValues((current) => ({
-                  ...current,
-                  title: event.target.value,
-                }))
-              }
-              aria-invalid={Boolean(errors.title)}
-              placeholder="e.g. Prepare weekly report"
-            />
-            {errors.title ? (
-              <p className="text-xs text-destructive">{errors.title}</p>
-            ) : null}
-          </div>
-
-          <div className="grid gap-1.5">
-            <Label htmlFor="task-description">Description</Label>
-            <Textarea
-              id="task-description"
-              value={values.description}
-              onChange={(event) =>
-                setValues((current) => ({
-                  ...current,
-                  description: event.target.value,
-                }))
-              }
-              placeholder="Optional details"
-              rows={3}
-            />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-1.5">
-              <Label htmlFor="task-priority">Priority</Label>
-              <Select
-                value={values.priority}
-                onValueChange={(value) =>
-                  setValues((current) => ({
-                    ...current,
-                    priority: value as TaskFormValues["priority"],
-                  }))
-                }
-              >
-                <SelectTrigger id="task-priority" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {TASK_PRIORITIES.map((priority) => (
-                    <SelectItem key={priority} value={priority}>
-                      {priority}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="grid gap-1.5">
-              <Label htmlFor="task-status">Status</Label>
-              <Select
-                value={values.status}
-                onValueChange={(value) =>
-                  setValues((current) => ({
-                    ...current,
-                    status: value as TaskFormValues["status"],
-                  }))
-                }
-              >
-                <SelectTrigger id="task-status" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {TASK_STATUSES.map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {status}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="grid gap-1.5">
-            <Label htmlFor="task-due-date">
-              Due date <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="task-due-date"
-              type="date"
-              value={values.dueDate}
-              onChange={(event) =>
-                setValues((current) => ({
-                  ...current,
-                  dueDate: event.target.value,
-                }))
-              }
-              aria-invalid={Boolean(errors.dueDate)}
-            />
-            {errors.dueDate ? (
-              <p className="text-xs text-destructive">{errors.dueDate}</p>
-            ) : null}
-          </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit">
-              {isEditing ? "Save changes" : "Create task"}
-            </Button>
-          </DialogFooter>
-        </form>
+        {open ? (
+          <TaskFormFields
+            key={formKey}
+            initialValues={toFormValues(task)}
+            isEditing={isEditing}
+            onCancel={() => onOpenChange(false)}
+            onSubmit={(values) => {
+              onSubmit(values)
+              onOpenChange(false)
+            }}
+          />
+        ) : null}
       </DialogContent>
     </Dialog>
   )
