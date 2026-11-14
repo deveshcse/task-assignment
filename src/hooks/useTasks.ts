@@ -56,6 +56,15 @@ export function useTasks() {
     return next
   }, [tasks, filters])
 
+  const recentTasks = useMemo(() => {
+    return [...tasks]
+      .sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      )
+      .slice(0, 5)
+  }, [tasks])
+
   const hasActiveFilters =
     filters.search.trim() !== "" ||
     filters.status !== "all" ||
@@ -112,6 +121,7 @@ export function useTasks() {
   return {
     tasks,
     filteredTasks,
+    recentTasks,
     filters,
     counts,
     hasActiveFilters,

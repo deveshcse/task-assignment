@@ -1,21 +1,21 @@
 import { useState } from "react"
 
-import { SummaryCards } from "@/components/dashboard/SummaryCards"
+import { DashboardPage } from "@/components/dashboard/DashboardPage"
 import { AppHeader } from "@/components/layout/AppHeader"
 import { AppSidebar } from "@/components/layout/AppSidebar"
 import { DeleteTaskDialog } from "@/components/tasks/DeleteTaskDialog"
-import { EmptyState } from "@/components/tasks/EmptyState"
-import { TaskFilters } from "@/components/tasks/TaskFilters"
 import { TaskFormDialog } from "@/components/tasks/TaskFormDialog"
-import { TaskTable } from "@/components/tasks/TaskTable"
+import { TasksPage } from "@/components/tasks/TasksPage"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { useTasks } from "@/hooks/useTasks"
+import type { AppPage } from "@/types/navigation"
 import type { Task, TaskFormValues } from "@/types/task"
 
 export function App() {
   const {
     tasks,
     filteredTasks,
+    recentTasks,
     filters,
     counts,
     hasActiveFilters,
@@ -26,6 +26,7 @@ export function App() {
     clearFilters,
   } = useTasks()
 
+  const [page, setPage] = useState<AppPage>("dashboard")
   const [formOpen, setFormOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [deletingTask, setDeletingTask] = useState<Task | null>(null)
@@ -58,57 +59,37 @@ export function App() {
     setDeletingTask(null)
   }
 
-  const showNoTasks = tasks.length === 0
-  const showNoResults = !showNoTasks && filteredTasks.length === 0
-
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar activePage={page} onNavigate={setPage} />
       <SidebarInset className="min-w-0 overflow-x-hidden">
-        <AppHeader onCreateTask={openCreateDialog} />
+        <AppHeader
+          page={page}
+          onCreateTask={page === "tasks" ? openCreateDialog : undefined}
+        />
 
-        <main className="flex min-w-0 flex-1 flex-col gap-4 p-4 sm:p-6">
-          <section id="dashboard" className="scroll-mt-20 space-y-4">
-            <SummaryCards counts={counts} />
-
-            <TaskFilters
+        <main className="flex min-w-0 flex-1 flex-col p-4 sm:p-6">
+          {page === "dashboard" ? (
+            <DashboardPage
+              counts={counts}
+              recentTasks={recentTasks}
+              onCreateTask={openCreateDialog}
+              onViewAllTasks={() => setPage("tasks")}
+              onEditTask={openEditDialog}
+            />
+          ) : (
+            <TasksPage
+              tasks={tasks}
+              filteredTasks={filteredTasks}
               filters={filters}
               hasActiveFilters={hasActiveFilters}
-              onChange={updateFilters}
-              onClear={clearFilters}
+              onFiltersChange={updateFilters}
+              onClearFilters={clearFilters}
+              onCreateTask={openCreateDialog}
+              onEditTask={openEditDialog}
+              onDeleteTask={setDeletingTask}
             />
-          </section>
-
-          <section id="tasks" className="min-w-0 scroll-mt-20 space-y-3">
-            <div className="flex flex-wrap items-end justify-between gap-2">
-              <div>
-                <h2 className="text-sm font-semibold tracking-tight">Tasks</h2>
-                <p className="text-xs text-muted-foreground">
-                  Showing {filteredTasks.length} of {tasks.length} task
-                  {tasks.length === 1 ? "" : "s"}
-                </p>
-              </div>
-            </div>
-
-            {showNoTasks ? (
-              <EmptyState variant="no-tasks" onCreateTask={openCreateDialog} />
-            ) : null}
-
-            {showNoResults ? (
-              <EmptyState
-                variant="no-results"
-                onClearFilters={clearFilters}
-              />
-            ) : null}
-
-            {!showNoTasks && !showNoResults ? (
-              <TaskTable
-                tasks={filteredTasks}
-                onEdit={openEditDialog}
-                onDelete={setDeletingTask}
-              />
-            ) : null}
-          </section>
+          )}
         </main>
       </SidebarInset>
 

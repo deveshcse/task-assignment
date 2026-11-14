@@ -1,4 +1,3 @@
-import { useState } from "react"
 import {
   CheckSquareIcon,
   ClipboardListIcon,
@@ -18,8 +17,7 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar"
-
-type NavId = "dashboard" | "tasks"
+import type { AppPage } from "@/types/navigation"
 
 const navItems = [
   {
@@ -34,15 +32,16 @@ const navItems = [
   },
 ]
 
-export function AppSidebar() {
+type AppSidebarProps = {
+  activePage: AppPage
+  onNavigate: (page: AppPage) => void
+}
+
+export function AppSidebar({ activePage, onNavigate }: AppSidebarProps) {
   const { isMobile, setOpenMobile } = useSidebar()
-  const [activeNav, setActiveNav] = useState<NavId>("dashboard")
 
-  function handleNavigate(id: NavId) {
-    setActiveNav(id)
-
-    const section = document.getElementById(id)
-    section?.scrollIntoView({ behavior: "smooth", block: "start" })
+  function handleNavigate(page: AppPage) {
+    onNavigate(page)
 
     if (isMobile) {
       setOpenMobile(false)
@@ -76,7 +75,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={id}>
                   <SidebarMenuButton
                     type="button"
-                    isActive={activeNav === id}
+                    isActive={activePage === id}
                     tooltip={label}
                     onClick={() => handleNavigate(id)}
                   >
