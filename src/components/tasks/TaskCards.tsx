@@ -27,7 +27,7 @@ type TaskCardsProps = {
   tasks: Task[]
   onView: (task: Task) => void
   onEdit: (task: Task) => void
-  onDelete: (task: Task) => void
+  onDelete?: (task: Task) => void
 }
 
 export function TaskCards({ tasks, onView, onEdit, onDelete }: TaskCardsProps) {
@@ -37,10 +37,10 @@ export function TaskCards({ tasks, onView, onEdit, onDelete }: TaskCardsProps) {
         const overdue = isOverdue(task.dueDate, task.status)
 
         return (
-          <Card key={task.id} size="sm" className="min-w-0">
+          <Card key={task.id} size="sm" className="min-w-0 overflow-hidden">
             <CardHeader className="gap-2">
               <div className="flex min-w-0 items-start justify-between gap-2">
-                <CardTitle className="min-w-0 flex-1 truncate text-base leading-snug">
+                <CardTitle className="min-w-0 flex-1 overflow-hidden truncate text-base leading-snug">
                   {task.title}
                 </CardTitle>
                 <div className="flex shrink-0 items-center gap-1">
@@ -72,22 +72,24 @@ export function TaskCards({ tasks, onView, onEdit, onDelete }: TaskCardsProps) {
                     <TooltipContent>Edit task</TooltipContent>
                   </Tooltip>
 
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        aria-label={`Delete ${task.title}`}
-                        onClick={() => onDelete(task)}
-                      >
-                        <Trash2Icon className="text-destructive" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Delete task</TooltipContent>
-                  </Tooltip>
+                  {onDelete ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          aria-label={`Delete ${task.title}`}
+                          onClick={() => onDelete(task)}
+                        >
+                          <Trash2Icon className="text-destructive" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Delete task</TooltipContent>
+                    </Tooltip>
+                  ) : null}
                 </div>
               </div>
-              <p className="truncate text-sm text-muted-foreground">
+              <p className="overflow-hidden truncate text-sm text-muted-foreground">
                 {task.description || "No description"}
               </p>
             </CardHeader>

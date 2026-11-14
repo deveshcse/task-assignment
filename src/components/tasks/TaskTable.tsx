@@ -23,7 +23,7 @@ type TaskTableProps = {
   tasks: Task[]
   onView: (task: Task) => void
   onEdit: (task: Task) => void
-  onDelete: (task: Task) => void
+  onDelete?: (task: Task) => void
 }
 
 export function TaskTable({ tasks, onView, onEdit, onDelete }: TaskTableProps) {
@@ -100,19 +100,21 @@ export function TaskTable({ tasks, onView, onEdit, onDelete }: TaskTableProps) {
                         <TooltipContent>Edit task</TooltipContent>
                       </Tooltip>
 
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            aria-label={`Delete ${task.title}`}
-                            onClick={() => onDelete(task)}
-                          >
-                            <Trash2Icon className="text-destructive" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Delete task</TooltipContent>
-                      </Tooltip>
+                      {onDelete ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              aria-label={`Delete ${task.title}`}
+                              onClick={() => onDelete(task)}
+                            >
+                              <Trash2Icon className="text-destructive" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Delete task</TooltipContent>
+                        </Tooltip>
+                      ) : null}
                     </div>
                   </TableCell>
                 </TableRow>

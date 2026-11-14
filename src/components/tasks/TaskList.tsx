@@ -6,7 +6,7 @@ type TaskListProps = {
   tasks: Task[]
   onView: (task: Task) => void
   onEdit: (task: Task) => void
-  onDelete: (task: Task) => void
+  onDelete?: (task: Task) => void
 }
 
 export function TaskList({ tasks, onView, onEdit, onDelete }: TaskListProps) {
