@@ -30,21 +30,15 @@ export function TaskFilters({
   onClear,
 }: TaskFiltersProps) {
   return (
-    <div className="flex min-w-0 flex-col gap-3 rounded-lg border bg-card p-3 sm:p-4">
-      <div className="flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <p className="text-sm font-medium">Search & filters</p>
-          <p className="text-xs text-muted-foreground">
-            Combine search, status, and priority together
-          </p>
-        </div>
-        {hasActiveFilters ? (
+    <div className="flex min-w-0 flex-col gap-3 ">
+      {hasActiveFilters ? (
+        <div className="flex justify-end">
           <Button variant="ghost" size="sm" onClick={onClear}>
             <XIcon data-icon="inline-start" />
             Clear filters
           </Button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
       <div className="grid min-w-0 gap-3 md:grid-cols-2 xl:grid-cols-4">
         <div className="min-w-0 space-y-1.5 md:col-span-2 xl:col-span-1">

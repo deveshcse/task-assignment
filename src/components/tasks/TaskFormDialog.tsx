@@ -74,7 +74,7 @@ function TaskFormFields({
   const [values, setValues] = useState<TaskFormValues>(initialValues)
   const [errors, setErrors] = useState<TaskFormErrors>({})
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const nextErrors = validateTaskForm(values)
