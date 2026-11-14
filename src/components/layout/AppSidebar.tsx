@@ -2,8 +2,10 @@ import {
   CheckSquareIcon,
   ClipboardListIcon,
   LayoutDashboardIcon,
+  XIcon,
 } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
 import {
   Sidebar,
   SidebarContent,
@@ -55,7 +57,7 @@ export function AppSidebar({ activePage, onNavigate }: AppSidebarProps) {
           <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <CheckSquareIcon className="size-4" />
           </div>
-          <div className="min-w-0 group-data-[collapsible=icon]:hidden">
+          <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
             <p className="truncate text-sm font-semibold tracking-tight">
               task-assignment
             </p>
@@ -63,6 +65,18 @@ export function AppSidebar({ activePage, onNavigate }: AppSidebarProps) {
               Task dashboard
             </p>
           </div>
+          {isMobile ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              className="shrink-0"
+              aria-label="Close sidebar"
+              onClick={() => setOpenMobile(false)}
+            >
+              <XIcon />
+            </Button>
+          ) : null}
         </div>
       </SidebarHeader>
 
