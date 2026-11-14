@@ -12,7 +12,7 @@ No backend is required.
 | --- | --- |
 | GitHub repository | [deveshcse/task-assignment](https://github.com/deveshcse/task-assignment) |
 | Live deployment | [task-assignment-psi-six.vercel.app](http://task-assignment-psi-six.vercel.app/) |
-| Screen recording | _Add your walkthrough link_ |
+| Screen recording | [Loom walkthrough](https://www.loom.com/share/45b1359ed3f14ebc92540e25055c5fb9) |
 
 ---
 
@@ -267,54 +267,8 @@ Delete is optional, so Dashboard recent tasks can reuse the same list UI with on
 - **Theme** is light-only
 - **UI system** uses shadcn/ui Nova preset rather than a ready-made dashboard template
 
----
 
-## Deployment
 
-### Vercel
-
-1. Push the project to GitHub
-2. Import the repository in Vercel
-3. Framework preset: Vite
-4. Build command: `npm run build`
-5. Output directory: `dist`
-6. Deploy
-
-### Netlify
-
-1. Push the project to GitHub
-2. Create a new site from the repository
-3. Build command: `npm run build`
-4. Publish directory: `dist`
-5. Deploy
-
----
-
-## Screen recording checklist
-
-Suggested demo flow (3–5 minutes):
-
-1. Show Dashboard empty / metrics state
-2. Create a task from Tasks page
-3. Show validation errors (missing title / due date)
-4. Edit status / priority / due date
-5. Demonstrate search + status + priority filters together
-6. Sort by due date
-7. Show mobile card layout (or resize browser)
-8. Delete with confirmation
-9. Refresh the page to prove LocalStorage persistence
-10. Briefly walk through `useTasks`, storage helpers, and component structure
-
----
-
-## Assignment submission checklist
-
-- [ ] GitHub repository with complete source code
-- [ ] Live deployment link (Vercel or Netlify)
-- [ ] 3–5 minute screen recording
-- [ ] README with setup instructions and project overview
-
----
 
 ## License
 
