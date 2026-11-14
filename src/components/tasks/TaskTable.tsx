@@ -10,6 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { formatDueDate, isOverdue } from "@/lib/format"
 import { cn } from "@/lib/utils"
 import type { Task } from "@/types/task"
@@ -45,9 +50,7 @@ export function TaskTable({ tasks, onEdit, onDelete }: TaskTableProps) {
                     <p className="truncate">{task.title}</p>
                   </TableCell>
                   <TableCell className="max-w-0 text-muted-foreground">
-                    <p className="truncate">
-                      {task.description || "—"}
-                    </p>
+                    <p className="truncate">{task.description || "—"}</p>
                   </TableCell>
                   <TableCell>
                     <PriorityBadge priority={task.priority} />
@@ -68,22 +71,33 @@ export function TaskTable({ tasks, onEdit, onDelete }: TaskTableProps) {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        aria-label={`Edit ${task.title}`}
-                        onClick={() => onEdit(task)}
-                      >
-                        <PencilIcon />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        aria-label={`Delete ${task.title}`}
-                        onClick={() => onDelete(task)}
-                      >
-                        <Trash2Icon className="text-destructive" />
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            aria-label={`Edit ${task.title}`}
+                            onClick={() => onEdit(task)}
+                          >
+                            <PencilIcon />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Edit task</TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            aria-label={`Delete ${task.title}`}
+                            onClick={() => onDelete(task)}
+                          >
+                            <Trash2Icon className="text-destructive" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Delete task</TooltipContent>
+                      </Tooltip>
                     </div>
                   </TableCell>
                 </TableRow>

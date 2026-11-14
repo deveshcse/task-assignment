@@ -3,6 +3,11 @@ import { PlusIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import type { AppPage } from "@/types/navigation"
 
 const pageCopy: Record<
@@ -43,10 +48,15 @@ export function AppHeader({ page, onCreateTask }: AppHeaderProps) {
         </p>
       </div>
       {page === "tasks" && onCreateTask ? (
-        <Button size="sm" onClick={onCreateTask}>
-          <PlusIcon data-icon="inline-start" />
-          New Task
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button size="sm" onClick={onCreateTask}>
+              <PlusIcon data-icon="inline-start" />
+              New Task
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Create a new task</TooltipContent>
+        </Tooltip>
       ) : null}
     </header>
   )

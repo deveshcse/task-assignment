@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { toast } from "sonner"
 
 import { DashboardPage } from "@/components/dashboard/DashboardPage"
 import { AppHeader } from "@/components/layout/AppHeader"
@@ -44,10 +45,16 @@ export function App() {
   function handleFormSubmit(values: TaskFormValues) {
     if (editingTask) {
       updateTask(editingTask.id, values)
+      toast.success("Task updated", {
+        description: `"${values.title.trim()}" was saved successfully.`,
+      })
       return
     }
 
     addTask(values)
+    toast.success("Task created", {
+      description: `"${values.title.trim()}" was added to your list.`,
+    })
   }
 
   function handleConfirmDelete() {
@@ -55,8 +62,12 @@ export function App() {
       return
     }
 
+    const title = deletingTask.title
     deleteTask(deletingTask.id)
     setDeletingTask(null)
+    toast.success("Task deleted", {
+      description: `"${title}" was removed.`,
+    })
   }
 
   return (
